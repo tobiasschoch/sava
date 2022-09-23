@@ -1,0 +1,20 @@
+importFrom("stats", "complete.cases", "predict", "uniroot")
+importFrom("graphics", "abline")
+
+S3method(print,sava)
+
+export(params)
+S3method(params,sava)
+
+export(SCV)
+S3method(predict,sava_scv)
+
+export(EBnormal0)
+S3method(predict,genjs0)
+
+export(EBpoisson0)
+S3method(predict,negbin0)
+
+export(ft)
+export(ft_inv)
+S3method(print,ft_trans)

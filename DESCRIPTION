@@ -1,0 +1,26 @@
+Package: sava
+Type: Package
+Title: Small Area Variation Analysis
+Version: 0.1
+Authors@R:
+   c(person(
+      given ="Tobias",
+      family = "Schoch",
+      email = "tobias.schoch@fhnw.ch",
+      role = c("aut","cre")))
+Description: Empirical Bayes methods used in the field of small area variation
+    analysis. This includes the estimators of
+    Efron and Morris (1975) <doi:10.1080/01621459.1975.10479864>,
+    Martuzzi and Hills (1995) <10.1093/aje/141.4.369>
+    McPherson et al. (1982) <doi:10.1056/NEJM198211183072104>,
+    Shwartz et al. (1994) <doi:10.1097/00005650-199403000-00001>,
+    and others.
+License: GPL (>= 2)
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.5.0)
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr, rmarkdown
