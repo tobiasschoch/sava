@@ -1,8 +1,16 @@
-importFrom("stats", "complete.cases", "predict", "uniroot")
+importFrom("stats", "complete.cases", "predict", "uniroot", "quantile")
 importFrom("graphics", "abline")
 
 S3method(print,sava)
 
+export(EQ)
+export(QSR)
+
+export(marshall)
+
+export(jackknife)
+
+export(mse)
 export(params)
 S3method(params,sava)
 
@@ -11,9 +19,11 @@ S3method(predict,sava_scv)
 
 export(EBnormal0)
 S3method(predict,genjs0)
+S3method(mse,genjs0)
 
 export(EBpoisson0)
 S3method(predict,negbin0)
+S3method(mse,negbin0)
 
 export(ft)
 export(ft_inv)

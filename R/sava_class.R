@@ -11,6 +11,14 @@
 #   tol: numeric tolerance
 # call
 
+# empty instance of class sava
+.empty_instance <- function(method = NA, params = NA, model = NA, call = NA,
+    class = "sava")
+{
+    structure(list(method = method, params = params, model = model,
+        converged = FALSE, call = call), class = class)
+}
+
 # S3 print method
 print.sava <- function(x, digits = max(1L, getOption("digits") - 2L), ...)
 {
@@ -33,4 +41,60 @@ params <- function(object, ...)
 params.sava <- function(object, ...)
 {
     object$params
+}
+
+# MSE estimation
+mse <- function(object, ...)
+{
+    UseMethod("mse")
+}
+
+# Jackknife variance estimator
+jackknife <- function(object, ...)
+{
+    if (!inherits(object, "sava"))
+        stop(call. = FALSE)
+
+    base <- object$params[[1]]
+    if (inherits(object, "negbin0"))
+        base <- 1 / base
+
+    oi <- object$model$oi; ei <- object$model$ei
+    n <- object$model$n
+    call <- object$call
+    call[[2]] <- substitute(oi[-i])
+    call[[3]] <- substitute(ei[-i])
+
+    res <- rep(0, n)
+    for (i in 1:n) {
+        tmp <- eval(call)
+        est <- tmp$params[[1]]
+        if (inherits(object, "negbin0"))
+            est <- 1 / est
+        res[i] <- (est - base)^2
+    }
+    sum(res) / (n - 1)
+}
+
+# extremal quotient
+EQ <- function(object, q = 0.2)
+{
+    stopifnot(is.numeric(q), length(q) == 1, q > 0, q < 0.5)
+    if (!inherits(object, c("negbin0", "genjs0")))
+        stop("EQ cannot be used for this object\n", call. = FALSE)
+
+    tmp <- quantile(predict(object), probs = c(q, 1 - q))
+    unname(tmp[2] / tmp[1])
+}
+
+# extremal quotient
+QSR <- function(object, q = 0.2)
+{
+    stopifnot(is.numeric(q), length(q) == 1, q > 0, q < 0.5)
+    if (!inherits(object, c("negbin0", "genjs0")))
+        stop("EQ cannot be used for this object\n", call. = FALSE)
+
+    yhat <- predict(object)
+    tmp <- quantile(yhat, probs = c(q, 1 - q))
+    unname(mean(yhat[yhat >= tmp[2]]) / mean(yhat[yhat <= tmp[1]]))
 }

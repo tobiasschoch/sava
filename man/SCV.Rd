@@ -1,6 +1,7 @@
 \name{SCV}
 \alias{SCV}
 \alias{predict.sava_scv}
+\alias{marshall}
 \title{Systematic Component of Variation}
 \description{
 Estimator of the systematic component of variation (SCV) of McPherson et al.
@@ -8,6 +9,7 @@ Estimator of the systematic component of variation (SCV) of McPherson et al.
 }
 \usage{
 SCV(oi, ei, approx = FALSE)
+marshall(oi, ei)
 
 # Utility functions
 \method{predict}{sava_scv}(object, ...)

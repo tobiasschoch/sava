@@ -1,6 +1,7 @@
 \name{EBnormal0}
 \alias{EBnormal0}
 \alias{predict.genjs0}
+\alias{mse.genjs0}
 \title{Normal--Normal Empirical Bayes Estimator (With Fixed Location)}
 \description{
 Empirical Bayes (EB) estimator of the variance in a Normal--Normal mixture
@@ -10,8 +11,8 @@ estimator/ predictor of the area-specific rates
 \usage{
 EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
 
-# Utility functions
 \method{predict}{genjs0}(object, ...)
+\method{mse}{genjs0}(object, method = "analytic", ...)
 }
 \arguments{
     \item{oi}{\code{[numeric vector]} area-specific observed counts.}
@@ -21,6 +22,8 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
     \item{tol}{\code{[double]} numerical tolerance criterion to stop the
         iterations (default: \code{1e-05}).}
     \item{object}{an object of class \code{sava_scv}.}
+    \item{method}{\code{[character]} type of mse estimator, \code{"analytic"}
+        or \code{"jackknife"} (default: \code{"analytic"}).}
     \item{...}{additional arguments.}
 }
 \details{
@@ -68,11 +71,13 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
             estimated by \code{EBnormal0()}. The implemented predictor
             applies the bias correction proposed in Morris (1983).
         }
-        \item{Uncertainty -- Mean square prediction error estimation}{
-            The mean square prediction error is computed by the jackknife
-            estimator of Jiang et al. (2002). It is implemented by
-            \code{mse()}, which takes as an argument an object of class
-            \code{sava}, i.e., output of \code{EBnormal0()}.
+        \item{Uncertainty -- Mean square prediction error estimation}{The mean
+            square prediction error can be computed by 1) the Prasad and Rao
+            (1990) analytic approximation (\code{method = "analytic"}) or 2)
+            the jackknife estimator of Jiang et al. (2002), see \code{method =
+                "jackknife"}. It is implemented by \code{mse()}, which takes as
+            an argument an object of class \code{sava}, i.e., output of
+            \code{EBnormal0()}.
         }
     }
 }
@@ -98,6 +103,10 @@ Morris, C. N. (1983). Parametric Empirical Bayes Inference: Theory and
     Applications. \emph{Journal of the American Statistical Association}
     \bold{78}, 47--55. \doi{10.1080/01621459.1983.10477920}
 
+Prasad, N. G. N. and Rao, J. N. K. (1990). The Estimation of the Mean Squared
+    Error of Small-Area Estimators. \emph{Journal of the American Statistical
+    Association} \bold{85}, 163-171. \doi{10. 2307/2289539}
+
 Shwartz, M., Ash, A. S., Anderson, J., Iezzoni, L. I., Payne, S. M. C. und
     Restuccia, J. D. (1994). Small Area Variations in Hospitalization Rates:
     How Much You See Depends on How You Look. \emph{Medical Care} \bold{32},
@@ -120,5 +129,5 @@ est
 predict(est)
 
 # estimates of the mean square prediction error
-#mse(est)
+mse(est)
 }

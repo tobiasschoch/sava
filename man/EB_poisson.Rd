@@ -1,6 +1,7 @@
 \name{EBpoisson0}
 \alias{EBpoisson0}
 \alias{predict.negbin0}
+\alias{mse.negbin0}
 \title{Poisson--Gamma Empirical Bayes Estimator of Variance (With Fixed
     Variance)}
 \description{
@@ -11,8 +12,8 @@ area-specific rates
 \usage{
 EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
 
-# Utility functions
 \method{predict}{negbin0}(object, ...)
+\method{mse}{negbin0}(object, type = c("rao", "jiang"), ...)
 }
 \arguments{
     \item{oi}{\code{[numeric vector]} observed counts.}
@@ -21,6 +22,8 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
         boundaries of the interval within which a root is searched.}
     \item{maxit}{\code{[integer]} maximum number of iterations to use
         (default: \code{1000}).}
+    \item{type}{\code{[character]} type of jackknife estimator, either
+        \code{type = "rao"} or \code{type = "jiang"} (default: \code{"rao"}).}
     \item{object}{an object of class \code{sava_scv}.}
     \item{...}{additional arguments.}
 }
@@ -68,8 +71,10 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
         }
         \item{Uncertainty -- Mean square prediction error estimation}{
             The mean square prediction error is computed by the jackknife
-            estimator of Jiang et al. (2002). It is implemented by
-            \code{mse()}, which takes as an argument an object of class
+            estimator. Two implementations are available: \code{"rao"}: Rao
+            (2003, Chapter 9.5.1) or \code{"jiang"}: Jiang et al. (2002). It is
+            implemented by \code{mse()}, which takes as an argument an object
+            of class
             \code{sava}, i.e., output of \code{EBpoisson0()}.
         }
     }
@@ -81,17 +86,20 @@ predicted rates and area-specific estimates of the mean square prediction
 error.
 }
 \references{
-D. Clayton, D. and Kaldor, J. (1987). Empirical Bayes estimates of
+Clayton, D. and Kaldor, J. (1987). Empirical Bayes estimates of
     age-standardized relative risks for use in disease mapping.
     \emph{Biometrics} \bold{43}, 671--681. \doi{10.2307/2532003}
 
-Jiang, J., Lahiri, P. und Wan, S.-M. (2002). A unified jackknife theory for
+Jiang, J., Lahiri, P. and Wan, S.-M. (2002). A unified jackknife theory for
     empirical best prediction with M-estimation. \emph{The Annals of
     Statistics} \bold{30}, 1782--1810. \doi{10.1214/aos/1043351257}
 
 Martuzzi, M. and Hills, M. (1995). Estimating the Degree of Heterogeneity
     between Event Rates Using Likelihood. \emph{American Journal of
     Epidemiology} \bold{141}, 369--374. \doi{10.1093/aje/141.4.369}
+
+Rao, J. N. K. (2003). \emph{Small Area Estimation}, John Wiley and Sons:
+    Hoboken (NJ).
 }
 \author{
 Tobias Schoch
@@ -109,6 +117,6 @@ est
 # predict rates
 predict(est)
 
-# estimate mean square prediction error
-# mse(est)
+# estimate mean square prediction error (type = "rao")
+mse(est)
 }

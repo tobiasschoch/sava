@@ -1,7 +1,8 @@
 EBnormal0 <- function(oi, ei, maxit = 100, tol = 1e-5)
 {
-    yi <- (oi - ei) / ei; di <- oi / ei^2
-    stopifnot(all(di > 0), length(yi) == length(di))
+    yi <- (oi - ei) / ei
+    di <- oi / ei^2
+    stopifnot(all(di >= 0), length(yi) == length(di))
 
     at <- complete.cases(yi, di)
     if (sum(at) != length(at))
@@ -35,7 +36,7 @@ EBnormal0 <- function(oi, ei, maxit = 100, tol = 1e-5)
         method =
             "Generalized James-Stein MLE estimator (location fixed at origin)",
         params = c(A = A),
-        model = list(oi = oi, ei = ei, n = length(yi)),
+        model = list(oi = oi, ei = ei, yi = yi, di = di, n = length(yi)),
         converged = converged,
         optim = list(niter = niter, tol = tol, negflag = negflag),
         call = match.call()),
@@ -53,8 +54,7 @@ EBnormal0 <- function(oi, ei, maxit = 100, tol = 1e-5)
 # S3 prediction method
 predict.genjs0 <- function(object, ...)
 {
-    oi <- object$model$oi; ei <- object$model$ei
-    yi <- (oi - ei) / ei; di <- oi / ei^2
+    yi <- object$model$yi; di <- object$model$di
 
     # shrinkage factor
     Bi <- di / (object$params[[1]] + di)
@@ -69,4 +69,56 @@ predict.genjs0 <- function(object, ...)
     delta + 1
 }
 
+# S3 mse method for genJS
+mse.genjs0 <- function(object, method = "analytic", ...)
+{
+    switch(match.arg(method, c("analytic", "jackknife")),
+        "analytic" = .mse_analytic(object),
+        "jackknife" = .mse_jackknife(object))
+}
 
+# mse analytic approximation (Prasad & Rao, 1990, JASA)
+.mse_analytic <- function(object)
+{
+    di <- object$model$di
+    A <- object$params[[1]]
+    Bi <- di / (A + di)
+    # first component
+    g1 <- A * Bi
+    # second component (zero because location is not estimated)
+    g2 <- 0
+    # third component (the same for MLE and REML; see Datta & Lahiri, 2000,
+    # Statistica Sinica)
+    g3 <- 2 * Bi^2 / ((A + di) * sum(1 / (A + di)^2))
+    # in total
+    g1 + g2 + g3
+}
+
+# Jackknife mse estimator of Jiang, Lahiri & Wang  (2002, Ann. Stat.)
+.mse_jackknife <- function(object)
+{
+    yi <- object$model$yi; di <- object$model$di
+    n <- object$model$n
+    delta_base <- predict(object)
+    # g1 component of mse
+    g1_base <- object$params[[1]] * di / (object$params[[1]] + di)
+
+    oi <- object$model$oi; ei <- object$model$ei
+    call <- object$call
+    call[[2]] <- substitute(oi[-i])
+    call[[3]] <- substitute(ei[-i])
+
+    m1 <- rep(0, n); m2 <- rep(0, n)
+    for (i in 1:n) {
+        tmp <- eval(call)
+        tmp$model <- list(yi = yi, di = di, n = length(yi))
+        A <- tmp$params[[1]]
+        # jackknife estimator of rule delta
+        m1 <- m1 + (A * di / (A + di) - g1_base)^2
+        m2 <- m2 + (predict(tmp) - delta_base)^2
+    }
+    m1 <- m1 * (n - 1) / n
+    m2 <- m2 * (n - 1) / n
+    # mse estimator
+    g1_base - m1 + m2
+}

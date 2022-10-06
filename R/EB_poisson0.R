@@ -13,7 +13,7 @@ EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
         params = c(alpha = tmp$root),
         model = list(oi = oi, ei = ei, n = length(oi)),
         converged = ifelse(is.na(tmp$root), FALSE, TRUE),
-        optim = list(niter = tmp$iter, interval = interval),
+        optim = list(niter = tmp$iter, interval = interval, maxit = maxit),
         call = match.call()),
         class = c("sava", "negbin0"))
 }
@@ -32,6 +32,37 @@ EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
 # S3 prediction method
 predict.negbin0 <- function(object, ...)
 {
-    alpha <- object$params[[1]]
+    alpha <- params(object)
     (object$model$oi + alpha) / (object$model$ei + alpha)
+}
+
+# S3 jackknife estimator mse
+mse.negbin0 <-function(object, type = c("rao", "jiang"), ...)
+{
+    alpha <- params(object)
+    # Jackknife: shape
+    oi <- object$model$oi; ei <- object$model$ei; n <- object$model$n
+    alpha_delete_one <- numeric(n)
+    for (i in 1:n)
+        alpha_delete_one[i] <- params(EBpoisson0(oi[-i], ei[-i], interval =
+            object$optim$interval, maxit = object$optim$maxit))
+    # Estimate of M1 (using posterior variance g; see Rao, 2003, p. 199)
+    switch(match.arg(type, c("rao", "jiang")),
+        "rao" = {
+            g <- (oi + alpha) / (ei + alpha)^2
+            M1 <- g - sapply(as.list(alpha_delete_one), function(x){
+                sum((oi + x) / (ei + x)^2 - g)}) * (n - 1) / n
+        },
+        "jiang" = {
+            g <- 1 / (ei + alpha)
+            M1 <- g - sapply(as.list(alpha_delete_one), function(x){
+                sum(1 / (ei + x) - g)}) * (n - 1) / n
+        })
+    # truncate at zero (treat negative values)
+    M1 <- pmax(0, M1)
+    # Estimate of M2
+    delta <- predict(object)
+    M2 <- sapply(as.list(alpha_delete_one), function(x){
+        sum(((oi + x) / (ei + x) - delta)^2)}) * (n - 1) / n
+    M1 + M2
 }
