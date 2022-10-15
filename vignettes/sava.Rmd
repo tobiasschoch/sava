@@ -1,0 +1,218 @@
+---
+title: "Vignette: Small Area Variation Analysis"
+author: "Tobias Schoch"
+output:
+    html_document:
+        css: "fluent.css"
+        highlight: tango
+vignette: >
+  %\VignetteIndexEntry{SmallAreaVariationAnalysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+    collapse = TRUE,
+    comment = "",
+    prompt = TRUE
+)
+```
+
+```{css, echo = FALSE}
+.my-sidebar-orange {
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: 0.75rem;
+    border-radius: .25rem;
+    border-left-color: #ce5b00;
+}
+
+.my-sidebar-blue {
+    padding-left: 1.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: 0.75rem;
+    border-radius: .25rem;
+    border-left-color: #1f618d;
+}
+```
+
+## Outline
+
+In this vignette, we discuss the estimation of the
+
+* direct standardization of rate (incl. confidence intervals),
+* systematic component of variation (SCV, [McPherson et al., 1982](#biblio)),
+* Poisson-Gamma Empricial Bayes model ([Marutzzi and Hills, 1995](#biblio)) and the Extremal Quotient ([Coory and Gibberd, 1998](#biblio)).
+
+First, we load the package.
+
+```{r}
+library("sava")
+```
+
+## 1 Direct standardized rates (incl. confidence interval)
+The data used in this section are on Down's syndrome from Michigan, 1950-1964, and is from [Fay and Feuer (1997)](#biblio). The observed count data by age group ("under 20", "20-24", "25-29", "30-34", "35-39", "40 and over 40" years) are given by
+
+```{r}
+oi <- c(0 ,8 , 63, 112, 262, 295)
+```
+The number of individuals in the study population (by age group) are
+
+```{r}
+ni <- c(327, 30666, 123419, 149919, 104088, 34392)
+```
+
+The ratio of `oi` and `ni` defines the crude rate. In addition, we use the shares of the age groups in the standard population. Note that the shares sum up to 1.
+
+```{r}
+si <- c(0.1133, 0.3296, 0.2784, 0.1728, 0.0842, 0.0217)
+```
+
+The weights (by age group) are defined by
+```{r}
+wi <- si / ni
+```
+
+With this, an estimate of the direct standardized rate per 10,000 (see argument `scale = 10000`) and its 95% confidence interval (default) are obtained by
+
+```{r}
+DSR(oi, wi, scale = 10000)
+```
+
+The construction of the confidence intervals follows [Fay and Feuer (1997)](#biblio) and is based on the gamma distribution. If only the confidence interval is needed, function `DSR()` can be called with argument `simple = TRUE`
+
+```{r}
+DSR(oi, wi, scale = 10000, simple = TRUE)
+```
+
+<div class="my-sidebar-orange">
+<p style="color: #ce5b00;">
+**IMPORTANT**
+</p>
+<p>
+The confidence intervals are constructed under the assumption that the observed counts are independent Poisson random variables. If the distribution of the empirical data show overdispersion, the constructed confidence intervals tend to be too short.
+</p>
+</div>
+
+## 2 Sytematic component of variation and Empirical Bayes methods
+
+The methods are computed with the `TURP` data (number of transurethral resections of the prostate for 61 hospital service areas (HSA) in Switzerland, 2014). The first six rows of the data set are
+
+```{r}
+data(TURP)
+head(TURP)
+```
+
+where `oi` and `ei` denote, respectively, the observed and expected number of surgeries. The expected numbers are computed by internal, indirect standardization. As a consequence, `sum(TURP$oi) = sum(TURP$ei)`. The variables `yi` and `di` are not relevant here.
+
+### 2.1 SCV
+
+The systematic component of variation (SCV) is due to [McPherson et al. (1982)](#biblio). The function `SCV()` implements the estimator of [McPherson et al. (1982)](#biblio) (argument `approx = FALSE`) and the slightly modified estimator in [Diehr et al. (1990)](#biblio). The latter obtains by calling `SCV()` with the argument `approx = FALSE`. The estimator of [Diehr et al. (1990)](#biblio) is preferred because it is well defined in case `oi = 0` whereas the estimator of [McPherson et al. (1982)](#biblio) breaks down in this case.
+
+The estimator in [Diehr et al. (1990)](#biblio) is our default estimator of SCV and is computed as follows
+
+```{r}
+s <- SCV(TURP$oi, TURP$ei)
+s
+```
+
+The return value of `SCV()` is an object/ list with the following slots
+
+```{r}
+names(s)
+```
+
+The estimate of the SCV can be extracted from object `s` by
+```{r}
+params(s)
+```
+
+All other elements can be extracted using the `$` operator.
+
+### 2.2 Poisson Empirical Bayes method
+[Marutzzi and Hills (1995)](#biblio) suggested an Empirical Bayes approach based on a Poisson-Gamma hierarchical model. The model is the same as the one in [Clayton and Kaldor (1987)](#biblio) except that the mean of the Gamma a-priori distribution is fixed at unity. The marginal distribution is the negative binomial distribution (NegBin) parametrized in one parameter (`alpha`). The maximum-likelihood estimator of `alpha` is computed by
+
+```{r}
+p <- EBpoisson0(TURP$oi, TURP$ei)
+p
+```
+
+The estimate of `alpha` can be extracted from object `p` by
+
+```{r}
+params(p)
+```
+The estimated variance of the Gamma a-priori distribution is computed as the inverse of the estimated `alpha` parameter, that is by
+
+```{r}
+1 / params(p)
+```
+
+The estimated variance can be seen as an analogue to the systematic component of variation. All other elements of object `p` can be extracted using the `$` operator.
+
+In place of the crude rates `oi/ei`, the Empirical Bayes predictions of the (shrinked) rates are computed as
+
+```{r}
+head(predict(p))
+```
+
+Statistical inference for the HSA-specific rates are based on the estimated mean square (prediction) error (MSE). The function `mse()` implements two jackknife estimators of the MSE:
+
+* `method = "rao"` see [Rao (2003, Chapter 9.5.1)](#biblio)
+* `method = "jiang"` see [Jiang et al. (2002)](#biblio)
+
+Method `"rao"` is the default. The estimated MSE is computed by
+
+```{r}
+head(mse(p))
+```
+
+[Coory and Gibberd (1998)](#biblio) proposed to compute the Extremal Quotient of the *predicted* rates, which is the ratio of high versus low rates. E.g., the EQ(80/20) is the ratio of the 80% quantile of the rates divided by the 20% quantile. It is computed by
+
+```{r}
+EQ(p)
+```
+
+By default, `EQ()` is computed with argument `q = 0.2`, which yields the 80/20 ratio. Any other value of `q` can be used.
+
+<div class="my-sidebar-orange">
+<p style="color: #ce5b00;">
+**IMPORTANT**
+</p>
+<p>
+`EQ()` is computed for the *predicted* rate, not the crude rates. Thus, it does not suffer from the issues discussed in, e.g., [Diehr et al. (1990)](#biblio).
+</p>
+</div>
+
+## References {#biblio}
+
+Clayton, D. and Kaldor, J. (1987). Empirical Bayes estimates of age-standardized relative risks for use in disease mapping. *Biometrics* **43**, 671-681.
+[DOI:10.2307/2532003](https://doi.org/10.2307/2532003)
+
+Coory, M. and Gibberd, R. (1998). New measures for reporting the magnitude of small-area variation in rates. *Statistics in Medicine* **17**, 2625-2634.
+[DOI:10.1002/(SICI)1097-0258(19981130)17:22<2625::AID-SIM957>3.0.CO;2-4](https://doi.org/10.1002/(SICI)1097-0258(19981130)17:22<2625::AID-SIM957>3.0.CO;2-4)
+
+Diehr, P., Cain, K., Connell, F. and Volinn, E. (1990). What is too much variation? The null hypothesis in small-area analysis. *Health Service Research* **24**, 741-771.
+
+Fay, M. P. and Feuer, E. J. (1997). Confidence intervals for directly standardized rates: A method based on the gamma distribution. *Statistics in Medicine* **16**, 791-801.
+[DOI:10.1002/(SICI)1097-0258(19970415)16:7<791::AID-SIM500>3.0.CO;2-%23](https://doi.org/10.1002/(SICI)1097-0258(19970415)16:7<791::AID-SIM500>3.0.CO;2-%23)
+
+Jiang, J., Lahiri, P. and Wan, S.-M. (2002). A unified jackknife theory for empirical best prediction with *M*-estimation. *The Annals of Statistics* **30**, 1782-1810.
+[DOI:10.1214/aos/1043351257](https://doi.org/10.1214/aos/1043351257)
+
+Martuzzi, M. and Hills, M. (1995). Estimating the Degree of Heterogeneity between Event Rates Using Likelihood. *American Journal of Epidemiology* **141**, 369-374.
+[DOI:10.1093/aje/141.4.369](https://doi.org/10.1093/aje/141.4.369)
+
+McPherson, K., Wennberg, J. E., Hovind, O. B. and Clifford, P. (1982). Small-Area Variations in the Use of Common Surgical Procedures: An International Comparison of New England, England, and Norway. *New England Journal of Medicine* **307**, 1310-1314.
+[DOI:10.1056/NEJM198211183072104](https://doi.org/10.1056/NEJM198211183072104)
+
+Rao, J. (2003). *Small Area Estimation*, Hoboken (NJ): John Wiley and Sons.

@@ -1,4 +1,5 @@
-importFrom("stats", "complete.cases", "predict", "uniroot", "quantile")
+importFrom("stats", "complete.cases", "predict", "uniroot", "quantile",
+    "qchisq")
 importFrom("graphics", "abline")
 
 S3method(print,sava)
@@ -6,9 +7,9 @@ S3method(print,sava)
 export(EQ)
 export(QSR)
 
-export(marshall)
-
 export(jackknife)
+
+export(DSR)
 
 export(mse)
 export(params)

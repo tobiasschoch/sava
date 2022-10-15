@@ -3,7 +3,9 @@
 ^\.gitattributes$
 ^\.gitignore$
 ^README\.md$
+# vignettes folder
+^vignettes/my_Makefile$
 # documentation
-^inst$
+^inst/varia$
 # license (github requries it in the base directory but CRAN complains)
 ^LICENSE$

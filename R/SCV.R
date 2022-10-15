@@ -1,5 +1,5 @@
 # Systematic component of variation (McPherson et al., 1982)
-SCV <- function(oi, ei, approx = FALSE)
+SCV <- function(oi, ei, approx = TRUE)
 {
     at <- complete.cases(oi, ei)
     if (sum(at) != length(at))
@@ -40,32 +40,4 @@ SCV <- function(oi, ei, approx = FALSE)
 predict.sava_scv <- function(object, ...)
 {
     object$model$oi / object$model$ei
-}
-
-# Marshall (1991) estimator
-marshall <- function(oi, ei)
-{
-    at <- complete.cases(oi, ei)
-    if (sum(at) != length(at))
-        stop("Some values are missing or not a number\n")
-
-    stopifnot(all(ei > 0), all(oi >= 0))
-
-    # skeleton of return value
-    n <- length(ei)
-    res <- .empty_instance(
-        method = "Marshall estimator", model = list(oi = oi, ei = ei, n = n),
-        call = match.call(), class = c("sava", "sava_scv"))
-
-    tau2 <- (sum((oi - ei)^2 / ei) - n) / sum(ei)
-    names(tau2) <- "tau2"
-
-    if (tau2 < 0) {
-        res$params <- 0
-        res$converged <- FALSE
-    } else {
-        res$params <- tau2
-        res$converged <- TRUE
-    }
-    res
 }
