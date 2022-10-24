@@ -2,11 +2,25 @@ EBnormal0 <- function(oi, ei, maxit = 100, tol = 1e-5)
 {
     yi <- (oi - ei) / ei
     di <- oi / ei^2
+
     stopifnot(all(di >= 0), length(yi) == length(di))
 
     at <- complete.cases(yi, di)
     if (sum(at) != length(at))
         stop("Some values are missing or not a number\n")
+
+   # skeleton of return value
+    res <- .empty_instance(
+        method =
+            "Generalized James-Stein MLE estimator (location fixed at origin)",
+        model = list(oi = oi, ei = ei, yi = yi, di = di, n = length(yi)),
+        call = match.call(), class = c("sava", "genjs0"))
+
+    # return NA if expected value is zero
+    if (any(ei == 0)) {
+        warning("Some of the expected values are zero\n", call. = FALSE)
+        return(res)
+    }
 
     # initialization: ML estimator of variance (location kept fixed at zero)
     # Fisher scoring
@@ -32,15 +46,13 @@ EBnormal0 <- function(oi, ei, maxit = 100, tol = 1e-5)
         }
     }
 
-    structure(list(
-        method =
-            "Generalized James-Stein MLE estimator (location fixed at origin)",
-        params = c(A = A),
-        model = list(oi = oi, ei = ei, yi = yi, di = di, n = length(yi)),
-        converged = converged,
-        optim = list(niter = niter, tol = tol, negflag = negflag),
-        call = match.call()),
-        class = c("sava", "genjs0"))
+    # if converged (otherwise params = NA, converged = FALSE, optim = NULL)
+    if (converged) {
+        res$params <- c(A = A)
+        res$converged <- TRUE
+        res$optim <- list(niter = niter, tol = tol, negflag = negflag)
+    }
+    res
 }
 
 # internal function used in Fisher scoring algorithm

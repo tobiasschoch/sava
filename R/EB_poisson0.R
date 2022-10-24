@@ -1,21 +1,40 @@
 # Poisson-Gamma model restricted to variance of Gamma prior equal to 1
 EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
 {
-    stopifnot(all(ei > 0), all(oi >= 0), length(ei) == length(oi))
+    stopifnot(all(ei >= 0), all(oi >= 0), length(ei) == length(oi))
+
     at <- complete.cases(oi, ei)
     if (sum(at) != length(at))
         stop("Some values are missing or not a number\n")
 
+    # skeleton of return value
+    res <- .empty_instance(
+        method = "NegBin MLE estimator (one-parameter)",
+        model = list(oi = oi, ei = ei, n = length(ei)),
+        call = match.call(), class = c("sava", "negbin0"))
+
+   # return NA if expected value is zero
+    if (any(ei == 0)) {
+        warning("Some of the expected values are zero\n", call. = FALSE)
+        return(res)
+    }
+
+    # check sign change over interval
+    if (.mle_negbin0(interval[2], oi, ei) > 0) {
+        warning("Maximum-likelihood estimator is undefined\n", call. = FALSE)
+        return(res)
+    }
+
+    # compute root
     tmp <- uniroot(.mle_negbin0, interval = interval, oi = oi, ei = ei,
         maxiter = maxit)
-    structure(list(
-        method = "NegBin MLE estimator (one-parameter)",
-        params = c(alpha = tmp$root),
-        model = list(oi = oi, ei = ei, n = length(oi)),
-        converged = ifelse(is.na(tmp$root), FALSE, TRUE),
-        optim = list(niter = tmp$iter, interval = interval, maxit = maxit),
-        call = match.call()),
-        class = c("sava", "negbin0"))
+
+    if (!is.na(tmp$root)) {
+        res$params <- c(alpha = tmp$root)
+        res$converged <- TRUE
+        res$optim <- list(niter = tmp$iter, interval = interval, maxit = maxit)
+    }
+    res
 }
 
 # MLE of one-parameter negative binomial

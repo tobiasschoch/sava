@@ -116,7 +116,7 @@ where `oi` and `ei` denote, respectively, the observed and expected number of su
 
 ### 2.1 SCV
 
-The systematic component of variation (SCV) is due to [McPherson et al. (1982)](#biblio). The function `SCV()` implements the estimator of [McPherson et al. (1982)](#biblio) (argument `approx = FALSE`) and the slightly modified estimator in [Diehr et al. (1990)](#biblio). The latter obtains by calling `SCV()` with the argument `approx = FALSE`. The estimator of [Diehr et al. (1990)](#biblio) is preferred because it is well defined in case `oi = 0` whereas the estimator of [McPherson et al. (1982)](#biblio) breaks down in this case.
+The systematic component of variation (SCV) is due to [McPherson et al. (1982)](#biblio). The function `SCV()` implements the estimator of [McPherson et al. (1982)](#biblio) (argument `approx = FALSE`) and the slightly modified estimator in [Diehr et al. (1990)](#biblio). The latter obtains by calling `SCV()` with the argument `approx = TRUE`. The estimator of [Diehr et al. (1990)](#biblio) is preferred because it is well defined in case `oi = 0` whereas the estimator of [McPherson et al. (1982)](#biblio) breaks down in this case.
 
 The estimator in [Diehr et al. (1990)](#biblio) is our default estimator of SCV and is computed as follows
 

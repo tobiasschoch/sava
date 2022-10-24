@@ -12,8 +12,8 @@
 # call
 
 # empty instance of class sava
-.empty_instance <- function(method = NA, params = NA, model = NA, call = NA,
-    class = "sava")
+.empty_instance <- function(method = NA, params = NA_real_, model = NA,
+    call = NA, class = "sava")
 {
     structure(list(method = method, params = params, model = model,
         converged = FALSE, call = call), class = class)
