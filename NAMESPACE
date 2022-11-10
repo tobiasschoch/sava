@@ -1,8 +1,10 @@
 importFrom("stats", "complete.cases", "predict", "uniroot", "quantile",
-    "qchisq")
+    "qchisq", "var")
 importFrom("graphics", "abline")
 
 S3method(print,sava)
+
+export(kendall)
 
 export(EQ)
 export(QSR)
