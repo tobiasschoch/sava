@@ -42,6 +42,12 @@ Tobias Schoch
 \examples{
 data("TURP")
 
-% estimate SCV and extract estimated parameters
+# estimate SCV and extract estimated parameters
 params(SCV(TURP$oi, TURP$ei))
+
+# estimate Poisson-gamma model
+est <- EBpoisson0(TURP$oi, TURP$ei)
+
+# compute extremal quotient
+EQ(est)
 }

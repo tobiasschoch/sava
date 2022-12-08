@@ -1,4 +1,4 @@
-# Kendall coefficient of concordance W (without ties)
+# Kendall coefficient of concordance W
 kendall <- function(x, na.rm = FALSE)
 {
     if (!is.matrix(x))

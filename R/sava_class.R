@@ -82,9 +82,14 @@ EQ <- function(object, q = 0.2)
     stopifnot(is.numeric(q), length(q) == 1, q > 0, q < 0.5)
     if (!inherits(object, c("negbin0", "genjs0")))
         stop("EQ cannot be computed for this object\n", call. = FALSE)
-
-    tmp <- quantile(predict(object), probs = c(q, 1 - q))
-    unname(tmp[2] / tmp[1])
+    # predicted values
+    yhat <- predict(object)
+    if (length(yhat) > 5) {
+        tmp <- quantile(yhat, probs = c(q, 1 - q))
+        unname(tmp[2] / tmp[1])
+    } else {
+        NA
+    }
 }
 
 # extremal quotient
