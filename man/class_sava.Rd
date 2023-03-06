@@ -5,6 +5,7 @@
 \alias{mse}
 \alias{jackknife}
 \alias{EQ}
+\alias{QR}
 \alias{QSR}
 \title{Utility Functions for Class sava}
 \description{
@@ -15,6 +16,7 @@ params(object, ...)
 mse(object, ...)
 jackknife(object, ...)
 EQ(object, q = 0.2)
+QR(object)
 
 # Utility functions
 \method{print}{sava}(x, digits = max(1L, getOption("digits") - 2L), ...)
@@ -48,6 +50,6 @@ params(SCV(TURP$oi, TURP$ei))
 # estimate Poisson-gamma model
 est <- EBpoisson0(TURP$oi, TURP$ei)
 
-# compute extremal quotient
-EQ(est)
+# compute quintile ratio
+QR(est)
 }

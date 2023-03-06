@@ -1,7 +1,7 @@
 Package: sava
 Type: Package
 Title: Small Area Variation Analysis
-Version: 0.2
+Version: 0.4
 Authors@R:
    c(person(
       given ="Tobias",

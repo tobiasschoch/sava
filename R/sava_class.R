@@ -91,6 +91,11 @@ EQ <- function(object, q = 0.2)
         NA
     }
 }
+# quntile ratio (wrapper function for EQ)
+QR <- function(object)
+{
+    EQ(object, q = 0.2)
+}
 
 # extremal quotient
 QSR <- function(object, q = 0.2)

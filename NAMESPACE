@@ -7,6 +7,7 @@ S3method(print,sava)
 export(kendall)
 
 export(EQ)
+export(QR)
 export(QSR)
 
 export(jackknife)
