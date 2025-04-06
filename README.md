@@ -10,8 +10,7 @@ The `sava` package is a contributed package for the R language and environment f
 - **Extremal Quotient** (EQ, [Coory and Gibberd, 1998](#references)). EQ is the ratio of high versus low rates.
 - Functions for **direct standardization of rates** (incl. confidence intervals; see [Fay and Feuer, 1997](#Reference)).
 
-Have a look at the [vignette](https://github.com/tobiasschoch/sava/blob/main/vignettes/sava.html) for more information.   
-
+<b style="color:red;"> Learn more:</b> Have a look at the [vignette](https://tobiasschoch.github.io/sava/vignettes/sava.html) for more information.   
 
 
 
