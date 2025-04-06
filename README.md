@@ -10,13 +10,23 @@ The `sava` package is a contributed package for the R language and environment f
 - **Extremal Quotient** (EQ, [Coory and Gibberd, 1998](#references)). EQ is the ratio of high versus low rates.
 - Functions for **direct standardization of rates** (incl. confidence intervals; see [Fay and Feuer, 1997](#Reference)).
 
-<b style="color:red;"> Learn more:</b> Have a look at the [vignette](https://tobiasschoch.github.io/sava/vignettes/sava.html) for more information.   
+
+
+> [!NOTE]
+>
+> Have a look at the [vignette](https://tobiasschoch.github.io/sava/vignettes/sava.html) for more information.   
 
 
 
 ## Installation
 
-Make sure that the R package `devtools` is installed. Then, the `sava` package can be pulled from this GitHub repository and installed by:
+Make sure that the R package `remotes` is installed [note: you can install it from CRAN using `install.packages("remotes")`]. Then, the `sava` package can be pulled from this GitHub repository and installed by:
+```
+remotes::install_github("tobiasschoch/sava")
+```
+
+**Alternative:** If you have installed the R package `devtools`, you can pull the `sava` package from this GitHub repository and install it using:
+
 ```
 devtools::install_github("tobiasschoch/sava")
 ```
