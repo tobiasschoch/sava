@@ -21,6 +21,8 @@ EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
 
     # check sign change over interval
     use_digamma <- getOption("sava_digamma")
+    if (is.null(use_digamma))
+        stop("Option 'sava_digamma' is not defined\n", call. = FALSE)
 
     if (.mle_negbin0(interval[2], oi, ei, use_digamma) > 0) {
         warning("Maximum-likelihood estimator is undefined\n", call. = FALSE)
