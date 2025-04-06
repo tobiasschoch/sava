@@ -22,7 +22,8 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
     \item{tol}{\code{[double]} numerical tolerance criterion to stop the
         iterations (default: \code{1e-05}).}
     \item{object}{an object of class \code{sava_scv}.}
-    \item{method}{\code{[character]} type of mse estimator, \code{"analytic"}
+    \item{method}{\code{[character]} type of mean square prediction error
+        (MSE) estimator, \code{"analytic"}
         or \code{"jackknife"} (default: \code{"analytic"}).}
     \item{...}{additional arguments.}
 }
@@ -31,7 +32,8 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
         \item{Workflow}{
             The workflow is as follows: 1) estimate the parameters by
             \code{EBnormal0()}, 2) predict the rates by \code{predict()}, and
-            3) compute the mean square prediction error using \code{mse()}
+            3) compute the mean square prediction error (MSE) using
+            \code{mse()}
         }
         \item{Parameter estimation}{
             Consider the following 2-stage conditionally independent
@@ -49,7 +51,7 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
             standardization (see e.g., Fleiss et al., 2003, Chapter 19). The
             variances \eqn{D_i}{D[i]}'s are known quantities, which are
             defined as \eqn{D_i = o_i / e_i^2}{D[i] = o[i] / e[i]^2} (Shwartz
-            et al., 1994). The a priori distribution is
+            et al., 1994). The a-priori distribution is
 
             \deqn{\Theta_i \sim N(0, A)}{\Theta_i \sim N(0, A)}
 
@@ -60,7 +62,7 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
             estimate of \eqn{A}{A} is set to \code{NA} if the estimate is
             negative or when the algorithm does not converge.
 
-            \emph{Note.} The a priori location is zero. Hence, the EB
+            \emph{Note.} The a-priori location is zero. Hence, the EB
             prediction rule shrinks towards the origin. This is reflected in
             the name of \code{EBnormal0} by the suffix \code{0}.
         }
@@ -72,11 +74,11 @@ EBnormal0(oi, ei, maxit = 100, tol = 1e-5)
             applies the bias correction proposed in Morris (1983).
         }
         \item{Uncertainty -- Mean square prediction error estimation}{The mean
-            square prediction error can be computed by 1) the Prasad and Rao
-            (1990) analytic approximation (\code{method = "analytic"}) or 2)
-            the jackknife estimator of Jiang et al. (2002), see \code{method =
-                "jackknife"}. It is implemented by \code{mse()}, which takes as
-            an argument an object of class \code{sava}, i.e., output of
+            square prediction error (MSE) can be computed by 1) the Prasad and
+            Rao (1990) analytic approximation (\code{method = "analytic"}) or
+            2) the jackknife estimator of Jiang et al. (2002), see \code{method
+                = "jackknife"}. It is implemented by \code{mse()}, which takes
+            as an argument an object of class \code{sava}, i.e., output of
             \code{EBnormal0()}.
         }
     }
@@ -88,29 +90,29 @@ predicted rates and area-specific estimates of the mean square prediction
 error.
 }
 \references{
-Efron, B. und Morris, C. (1975). Data Analysis Using Stein’s Estimator and its
-    Generalizations. \emph{Journal of the American Statistical Association}
+Efron, B. and Morris, C. (1975). Data Analysis Using Stein’s Estimator and its
+    Generalizations. \emph{Journal of the American Statistical Association},
     \bold{70}, 311--19. \doi{10.1080/01621459.1975.10479864}
 
-Fleiss, J. L., Levin, B. und Paik, M. C. (2003). \emph{Statistical Methods for
+Fleiss, J. L., Levin, B. and Paik, M. C. (2003). \emph{Statistical Methods for
     Rates and Proportions}, Hoboken (NJ): John Wiley and Sons, 3rd ed.
 
-Jiang, J., Lahiri, P. und Wan, S.-M. (2002). A unified jackknife theory for
+Jiang, J., Lahiri, P. and Wan, S.-M. (2002). A unified jackknife theory for
     empirical best prediction with M-estimation. \emph{The Annals of
-    Statistics} \bold{30}, 1782--1810. \doi{10.1214/aos/1043351257}
+    Statistics}, \bold{30}, 1782--1810. \doi{10.1214/aos/1043351257}
 
 Morris, C. N. (1983). Parametric Empirical Bayes Inference: Theory and
-    Applications. \emph{Journal of the American Statistical Association}
+    Applications. \emph{Journal of the American Statistical Association},
     \bold{78}, 47--55. \doi{10.1080/01621459.1983.10477920}
 
 Prasad, N. G. N. and Rao, J. N. K. (1990). The Estimation of the Mean Squared
     Error of Small-Area Estimators. \emph{Journal of the American Statistical
-    Association} \bold{85}, 163-171. \doi{10. 2307/2289539}
+    Association}, \bold{85}, 163-171. \doi{10. 2307/2289539}
 
-Shwartz, M., Ash, A. S., Anderson, J., Iezzoni, L. I., Payne, S. M. C. und
+Shwartz, M., Ash, A. S., Anderson, J., Iezzoni, L. I., Payne, S. M. C. and
     Restuccia, J. D. (1994). Small Area Variations in Hospitalization Rates:
-    How Much You See Depends on How You Look. \emph{Medical Care} \bold{32},
-    189--201.  \doi{10.1097/00005650-199403000-00001}
+    How Much You See Depends on How You Look. \emph{Medical Care}, \bold{32},
+    189--201. \doi{10.1097/00005650-199403000-00001}
 }
 \author{
 Tobias Schoch

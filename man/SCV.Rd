@@ -29,7 +29,7 @@ expected cases must be strictly larger than zero. The SCV is then computed
 based on \eqn{y_i^2}{y[i]^2}. The above definition of \eqn{y_i}{y[i]} can
 problematic if zero cases were observed in one or more areas because
 \eqn{y_i}{y[i]} will then be negative infinity. As a consequence, SCV will be
-negative infinity as well.  Diehr et al. (1990, p. 754) define instead \eqn{y_i
+negative infinity as well. Diehr et al. (1990, p. 754) define instead \eqn{y_i
     = (o_i - e_i) / e_i}{y[i] = (o[i] - e[i]) / e[i]}, which is an
 approximation that does not suffer from the issue. This definition will be used
 if \code{SCV()} is called with argument \code{approx = TRUE}.
@@ -47,12 +47,12 @@ An object of class \code{sava_scv}
 McPherson, K., Wennberg, J. E., Hovind, O. B. and Clifford, P. (1982).
     Small-Area Variations in the Use of Common Surgical Procedures: An
     International Comparison of New England, England, and Norway.
-    \emph{New England Journal of Medicine} \bold{307}, 1310--1314.
+    \emph{New England Journal of Medicine}, \bold{307}, 1310--1314.
     \doi{10.1056/NEJM198211183072104}
 
 Diehr, P., Cain, K., Connell, F. and Volinn, E. (1990). What is too much
     variation? The null hypothesis in small- area analysis.
-    \emph{Health Service Research} \bold{24}, 741--771.
+    \emph{Health Service Research}, \bold{24}, 741--771.
 }
 \author{
 Tobias Schoch

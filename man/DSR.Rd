@@ -40,22 +40,21 @@ computed confidence intervals tend to be too short.
 If \code{simple = FALSE}, the return value is the confidence interval (a
 numeric vector of size 2), otherwise a list with the following slots is
 returned
-    \itemize{
-        \item{\code{DSR}}{direct standardized rate}
-        \item{\code{conf.int}}{confidence interval, vector} (with attributes)
-        \item{\code{scale}}{scaling factor}
-        \item{\code{method}}{description of method}
-    }
+
+    \item{\code{DSR}}{direct standardized rate}
+    \item{\code{conf.int}}{confidence interval, vector (with attributes)}
+    \item{\code{scale}}{scaling factor}
+    \item{\code{method}}{description of method}
 }
 \references{
 Fay, M. P. and Feuer, E. J. (1997). Confidence intervals for directly
     standardized rates: A method based on the gamma distribution.
-    \emph{Statistics in Medicine} \bold{16}, 791--801.
+    \emph{Statistics in Medicine}, \bold{16}, 791--801.
     \doi{10.1002/(SICI)1097-0258(19970415)16:7<791::AID-SIM500>3.0.CO;2-\\\%23}
 
-Ng, H. K. T., Filardo, G. und Zheng, G. (2008). Confidence interval estimating
+Ng, H. K. T., Filardo, G. and Zheng, G. (2008). Confidence interval estimating
     procedures for standardized incidence rates.
-    \emph{Computational Statistics and Data Analysis} \bold{52}, 3501--3516.
+    \emph{Computational Statistics and Data Analysis}, \bold{52}, 3501--3516.
     \doi{10.1016/j.csda.2007.11.004}
 }
 \author{

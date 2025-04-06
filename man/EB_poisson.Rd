@@ -22,7 +22,7 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
         boundaries of the interval within which a root is searched.}
     \item{maxit}{\code{[integer]} maximum number of iterations to use
         (default: \code{1000}).}
-    \item{type}{\code{[character]} type of jackknife estimator, either
+    \item{type}{\code{[character]} type of jackknife MSE estimator, either
         \code{type = "rao"} or \code{type = "jiang"} (default: \code{"rao"}).}
     \item{object}{an object of class \code{sava_scv}.}
     \item{...}{additional arguments.}
@@ -32,7 +32,8 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
         \item{Workflow}{
             The workflow is as follows: 1) estimate the parameters by
             \code{EBpoisson0()}, 2) predict the rates by \code{predict()}, and
-            3) compute the mean square prediction error using \code{mse()}
+            3) compute the mean square prediction error (MSE) using
+            \code{mse()}
         }
         \item{Parameter estimation}{
             Consider the following 2-stage conditionally independent
@@ -47,8 +48,8 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
             observed and expected number of counts in the areas \eqn{i = 1,
                 \ldots, n.}{i= 1, \ldots, n.} It is assumed that the
             \eqn{e_i}{e[i]}'s are computed by internal, indirect
-            standardization (see e.g., Fleiss et al., 2003, Chapter 19). The a
-            priori distribution is
+            standardization (see e.g., Fleiss et al., 2003, Chapter 19). The
+            a- priori distribution is
 
             \deqn{\Lambda_i \sim Gamma(\alpha, \alpha),}{\Lambda[i] \sim
                 Gamma(\alpha, \alpha),}
@@ -63,6 +64,12 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
             likelihood. The estimate of \eqn{\alpha}{\alpha} is set to
             \code{NA} if the estimate is negative or when the algorithm does
             not converge.
+
+            By default, if any of the \eqn{o_i}{o[i]}'s is larger than 200,
+            the score function of the maximum likelihood-estimator uses the
+            digamma function; see \code{getOption("sava_digamma")}. The default
+            value can be changed to, for example, 300 by setting
+            \code{options(sava_digamma = 300)}.
         }
         \item{Prediction}{
             The EB predictor of the rates (under the above model) is computed
@@ -70,7 +77,7 @@ EBpoisson0(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
             \code{EBpoisson0()}.
         }
         \item{Uncertainty -- Mean square prediction error estimation}{
-            The mean square prediction error is computed by the jackknife
+            The mean square prediction error (MSE) is computed by the jackknife
             estimator. Two implementations are available: \code{"rao"}: Rao
             (2003, Chapter 9.5.1) or \code{"jiang"}: Jiang et al. (2002). It is
             implemented by \code{mse()}, which takes as an argument an object
@@ -88,15 +95,15 @@ error.
 \references{
 Clayton, D. and Kaldor, J. (1987). Empirical Bayes estimates of
     age-standardized relative risks for use in disease mapping.
-    \emph{Biometrics} \bold{43}, 671--681. \doi{10.2307/2532003}
+    \emph{Biometrics}, \bold{43}, 671--681. \doi{10.2307/2532003}
 
 Jiang, J., Lahiri, P. and Wan, S.-M. (2002). A unified jackknife theory for
     empirical best prediction with M-estimation. \emph{The Annals of
-    Statistics} \bold{30}, 1782--1810. \doi{10.1214/aos/1043351257}
+    Statistics}, \bold{30}, 1782--1810. \doi{10.1214/aos/1043351257}
 
 Martuzzi, M. and Hills, M. (1995). Estimating the Degree of Heterogeneity
     between Event Rates Using Likelihood. \emph{American Journal of
-    Epidemiology} \bold{141}, 369--374. \doi{10.1093/aje/141.4.369}
+    Epidemiology}, \bold{141}, 369--374. \doi{10.1093/aje/141.4.369}
 
 Rao, J. N. K. (2003). \emph{Small Area Estimation}, John Wiley and Sons:
     Hoboken (NJ).

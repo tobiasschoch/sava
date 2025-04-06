@@ -67,16 +67,16 @@ object of class \code{ft_trans})
 }
 \references{
 Freeman, M. F. and Tukey, J. W. (1950). Transformations related to the angular
-    and the square root. \emph{Annals of Mathematical Statisits} \bold{21},
+    and the square root. \emph{Annals of Mathematical Statistics}, \bold{21},
     607--611. \doi{10.1214/aoms/1177729756}
 
 Miller, J. J. (1978). The Inverse of the Freeman--Tukey Double Arcsine
-    Transformation, \emph{The American Statistician} \bold{32}, 138.
+    Transformation, \emph{The American Statistician}, \bold{32}, 138.
     \doi{10.1080/00031305.1978.10479283}
 
 Mosteller, F. and Youtz, C. (1961). Tables of the Freeman--Tukey
     Transformations for the Binomial and Poisson Distributions.
-    \emph{Biometrika} \bold{48}, 433--440. \doi{10.2307/2332765}
+    \emph{Biometrika}, \bold{48}, 433--440. \doi{10.2307/2332765}
 }
 \author{
 Tobias Schoch

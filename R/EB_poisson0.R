@@ -20,14 +20,16 @@ EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
     }
 
     # check sign change over interval
-    if (.mle_negbin0(interval[2], oi, ei) > 0) {
+    use_digamma <- getOption("sava_digamma")
+
+    if (.mle_negbin0(interval[2], oi, ei, use_digamma) > 0) {
         warning("Maximum-likelihood estimator is undefined\n", call. = FALSE)
         return(res)
     }
 
     # compute root
     tmp <- uniroot(.mle_negbin0, interval = interval, oi = oi, ei = ei,
-        maxiter = maxit)
+        use_digamma = use_digamma, maxiter = maxit)
 
     if (!is.na(tmp$root)) {
         res$params <- c(alpha = tmp$root)
@@ -37,14 +39,20 @@ EBpoisson0 <- function(oi, ei, interval = c(1e-5, 1e4), maxit = 1000)
     res
 }
 
-# MLE of one-parameter negative binomial
-.mle_negbin0 <- function(alpha, oi, ei)
+# MLE of one-parameter negative binomial (score function)
+.mle_negbin0 <- function(alpha, oi, ei, use_digamma)
 {
     n <- length(oi)
-    indx <- seq_len(max(oi)) - 1
-    cs <- cumsum(1 / (indx + alpha))
-    cs <- c(0, cs)
-    sum(cs[oi + 1]) + n * (1 + log(alpha)) - sum((oi + alpha) / (ei + alpha)) -
+    mx <- max(oi)
+    term_1 <- if (mx > use_digamma) {
+        sum(digamma(alpha + oi)) - n * digamma(alpha)
+    } else {
+        indx <- seq_len(mx) - 1
+        cs <- cumsum(1 / (indx + alpha))
+        cs <- c(0, cs)
+        sum(cs[oi + 1])
+    }
+    term_1 + n * (1 + log(alpha)) - sum((oi + alpha) / (ei + alpha)) -
         sum(log(ei + alpha))
 }
 

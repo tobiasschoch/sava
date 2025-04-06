@@ -51,7 +51,7 @@ In this vignette, we discuss the estimation of the
 
 * direct standardization of rate (incl. confidence intervals),
 * systematic component of variation (SCV, [McPherson et al., 1982](#biblio)),
-* Poisson-Gamma Empricial Bayes model ([Marutzzi and Hills, 1995](#biblio)) and the Extremal Quotient ([Coory and Gibberd, 1998](#biblio)).
+* Poisson-Gamma Empirical Bayes model ([Marutzzi and Hills, 1995](#biblio)) and the Extremal Quotient ([Coory and Gibberd, 1998](#biblio)).
 
 First, we load the package.
 
@@ -103,7 +103,7 @@ The confidence intervals are constructed under the assumption that the observed 
 </p>
 </div>
 
-## 2 Sytematic component of variation and Empirical Bayes methods
+## 2 Systematic component of variation and Empirical Bayes methods
 
 The methods are computed with the `TURP` data (number of transurethral resections of the prostate for 61 hospital service areas (HSA) in Switzerland, 2014). The first six rows of the data set are
 
